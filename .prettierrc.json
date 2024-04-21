@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "//": "是否加分号",
+  "semi": false,
+  "//": "tab几格",
+  "tabWidth": 2,
+  "//": "是否是单引号",
+  "singleQuote": true,
+  "//": "每行代码长度",
+  "printWidth": 100,
+  "//": "多行是否在行尾加逗号",
+  "trailingComma": "none",
+  "//": "使用tab缩进还是空格缩进",
+  "useTabs": false
+}
