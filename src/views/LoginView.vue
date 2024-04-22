@@ -31,23 +31,54 @@
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
 import { Login } from '../api/modules/login'
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { cancelShortcut, registerShortcut } from '../utils/keyboard'
 const router = useRouter()
 const form = ref({
   name: '',
   password: ''
 })
-const login = () => {
-  Login(form.value)
-    .then((res) => {
-      localStorage.setItem('token', res.data.token)
-      console.log(res)
-      router.push('/')
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+const { login } = useLogin()
+onMounted(() => {})
+function useLogin() {
+  const login = () => {
+    console.log('%c Line:50 🌽', 'color:#3f7cff')
+    Login(form.value)
+      .then((res) => {
+        console.log('🚀 ~ onMounted ~ event:', event)
+        localStorage.setItem('token', res.data.token)
+        console.log(res)
+        router.push('/')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  onMounted(() => {
+    document.addEventListener(
+      'keyup',
+      (event) => {
+        const keyName = event.key
+
+        // As the user releases the Ctrl key, the key is no longer active,
+        // so event.ctrlKey is false.
+        if (keyName === 'Enter') {
+          login()
+        }
+      },
+      false
+    )
+  })
+
+  onUnmounted(() => {
+    document.removeEventListener('keyup', login)
+  })
+
+  return {
+    login
+  }
 }
 </script>
 <style lang="less" scoped>

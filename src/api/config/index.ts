@@ -8,7 +8,7 @@
 // } else {
 //   BASE_URL = 'http://codercba.com:9003'
 // }
-const BASE_URL = 'http://localhost:3001'
+const BASE_URL = 'http://localhost:3000'
 export const TIMEOUT = 10000
 export const HEADERS = {
   'Content-Type': 'application/json'
