@@ -2,8 +2,8 @@
   <div class="login-view">
     <div class="login-form">
       <div class="title">请登录</div>
-      <el-form :model="form" label-width="1px" style="max-width: 600px">
-        <el-form-item>
+      <el-form :model="form" label-width="1px" style="max-width: 600px" :rules="rules">
+        <el-form-item prop="name">
           <el-input
             v-model="form.name"
             placeholder="请输入用户名"
@@ -11,7 +11,7 @@
             clearable
           ></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input
             v-model="form.password"
             type="password"
@@ -30,20 +30,34 @@
 </template>
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
+import { ElMessage, type FormRules } from 'element-plus'
 import { Login } from '../api/modules/login'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+interface RuleForm {
+  name: string
+  password: string
+}
 const router = useRouter()
-const form = ref({
+const form = ref<RuleForm>({
   name: '',
   password: ''
+})
+const rules = reactive<FormRules<RuleForm>>({
+  name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 })
 const login = () => {
   Login(form.value)
     .then((res) => {
-      localStorage.setItem('token', res.data.token)
-      console.log(res)
-      router.push('/')
+      console.log('🚀 ~ .then ~ res:', res)
+      if (res.code === 0) {
+        localStorage.setItem('token', res.data.token)
+        console.log(res)
+        router.push('/')
+      } else if (res.status === -1002) {
+        ElMessage.error(res.message)
+      }
     })
     .catch((err) => {
       console.log(err)

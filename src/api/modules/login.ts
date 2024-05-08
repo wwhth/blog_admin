@@ -1,10 +1,11 @@
 import zRequest from '..'
 interface LoginResponse {
-  code: number
+  code?: number
   message: string
   data: {
     token: string
   }
+  status?: number
 }
 interface LoginRequest {
   name: string
