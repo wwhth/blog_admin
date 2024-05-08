@@ -32,7 +32,7 @@
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage, type FormRules } from 'element-plus'
 import { Login } from '../api/modules/login'
-import { ref, reactive } from 'vue'
+import { onMounted, onUnmounted, ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 interface RuleForm {
   name: string
@@ -47,21 +47,49 @@ const rules = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 })
-const login = () => {
-  Login(form.value)
-    .then((res) => {
-      console.log('🚀 ~ .then ~ res:', res)
-      if (res.code === 0) {
-        localStorage.setItem('token', res.data.token)
-        console.log(res)
-        router.push('/')
-      } else if (res.status === -1002) {
-        ElMessage.error(res.message)
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+const { login } = useLogin()
+onMounted(() => {})
+function useLogin() {
+  const login = () => {
+    console.log('%c Line:50 🌽', 'color:#3f7cff')
+    Login(form.value)
+      .then((res) => {
+        if (res.code === 0) {
+          ElMessage.success('登录成功')
+          localStorage.setItem('token', res.data.token)
+          router.push('/')
+        } else if (res.status === -1002) {
+          ElMessage.error(res.message)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  onMounted(() => {
+    document.addEventListener(
+      'keyup',
+      (event) => {
+        const keyName = event.key
+
+        // As the user releases the Ctrl key, the key is no longer active,
+        // so event.ctrlKey is false.
+        if (keyName === 'Enter') {
+          login()
+        }
+      },
+      false
+    )
+  })
+
+  onUnmounted(() => {
+    document.removeEventListener('keyup', login)
+  })
+
+  return {
+    login
+  }
 }
 </script>
 <style lang="less" scoped>
