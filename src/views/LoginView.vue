@@ -55,7 +55,7 @@ function useLogin() {
     Login(form.value)
       .then((res) => {
         if (res.code === 0) {
-          ElMessage.success('登录成功')
+          ElMessage.success(res.message)
           localStorage.setItem('token', res.data.token)
           router.push('/')
         } else if (res.status === -1002) {
