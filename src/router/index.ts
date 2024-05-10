@@ -32,5 +32,15 @@ const router = createRouter({
     }
   ]
 })
-
+router.beforeEach((to, from, next) => {
+  // 路由拦截
+  const token = localStorage.getItem('token')
+  if (to.path === '/login' && token) {
+    next('/')
+  } else if (to.path !== '/login' && !token) {
+    next('/login')
+  } else {
+    next()
+  }
+})
 export default router

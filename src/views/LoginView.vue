@@ -34,6 +34,8 @@ import { ElMessage, type FormRules } from 'element-plus'
 import { Login } from '../api/modules/login'
 import { onMounted, onUnmounted, ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { useLoginStore } from '@/stores/login'
+const loginStore = useLoginStore()
 interface RuleForm {
   name: string
   password: string
@@ -57,6 +59,7 @@ function useLogin() {
         if (res.code === 0) {
           ElMessage.success(res.message)
           localStorage.setItem('token', res.data.token)
+          loginStore.login(res.data.token)
           router.push('/')
         } else if (res.status === -1002) {
           ElMessage.error(res.message)
@@ -72,9 +75,6 @@ function useLogin() {
       'keyup',
       (event) => {
         const keyName = event.key
-
-        // As the user releases the Ctrl key, the key is no longer active,
-        // so event.ctrlKey is false.
         if (keyName === 'Enter') {
           login()
         }
