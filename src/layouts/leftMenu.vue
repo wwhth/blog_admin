@@ -8,6 +8,7 @@
       text-color="#fff"
       @open="handleOpen"
       @close="handleClose"
+      :collapse="isCollapse"
     >
       <el-sub-menu index="1">
         <template #title>
@@ -43,6 +44,15 @@
 </template>
 <script setup lang="ts">
 import { Document, Menu as IconMenu, Location, Setting } from '@element-plus/icons-vue'
+import { ref } from 'vue'
+const props = withDefaults(
+  defineProps<{
+    isCollapse: boolean
+  }>(),
+  {
+    isCollapse: false
+  }
+)
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
