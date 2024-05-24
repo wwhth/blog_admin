@@ -1,9 +1,7 @@
-<script setup lang="ts">
-import layout from './layouts/index.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <layout />
+  <RouterView />
 </template>
 
 <style scoped></style>

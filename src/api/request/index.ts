@@ -1,12 +1,15 @@
 import axios from 'axios'
-import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios'
+import type { AxiosHeaders, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 
 import type ZRequestConfig from './types'
 class ZRequest {
   instance: AxiosInstance
+  headers: Object
   // 让当前实例 => axios实例
   constructor(config: ZRequestConfig) {
+    console.log("%c Line:9 🍞 config", "color:#ed9ec7", config);
     this.instance = axios.create(config)
+    this.headers = config.headers as Object
     this.instance.interceptors.request.use(
       (config) => {
         console.log(config)
@@ -21,6 +24,10 @@ class ZRequest {
         return res.data
       },
       (err) => {
+        if (err.response.status === 401) {
+          localStorage.removeItem('token')
+          window.location.reload()
+        }
         console.log(err)
       }
     )
@@ -36,6 +43,12 @@ class ZRequest {
   }
   // 封装请求方法
   request<T = any>(config: ZRequestConfig<T>) {
+    console.log("%c Line:41 🍓 config", "color:#ed9ec7", config);
+    config.headers = {
+      ...this.headers as AxiosHeaders,
+      ...config.headers,
+      Authorization: localStorage.getItem('token')
+    }
     if (config.interceptors?.requestSuccess) {
       config = config.interceptors.requestSuccess(config as InternalAxiosRequestConfig)
     }
@@ -54,6 +67,7 @@ class ZRequest {
     })
   }
   get<T = any>(config: ZRequestConfig<T>) {
+    console.log("%c Line:59 🌶 config", "color:#4fff4B", config);
     return this.request<T>({ ...config, method: 'GET' })
   }
   post<T = any>(config: ZRequestConfig<T>) {

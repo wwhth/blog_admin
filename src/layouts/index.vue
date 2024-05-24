@@ -2,25 +2,22 @@
   <div class="common-layout">
     <el-container>
       <el-aside :width="isCollapse ? '63px' : '200px'"
-        ><leftMenu v-if="loginStore.isLogin" :isCollapse="isCollapse"
+        ><leftMenu :isCollapse="isCollapse"
       /></el-aside>
       <el-container>
-        <el-header
-          ><Header v-if="loginStore.isLogin" @change-collapse="changeCollapse"
-        /></el-header>
+        <el-header><Header @change-collapse="changeCollapse" /></el-header>
         <el-main><RouterView /></el-main>
-        <el-footer height="60px"><Footer v-if="loginStore.isLogin" /></el-footer>
+        <el-footer height="60px"><Footer /></el-footer>
       </el-container>
     </el-container>
   </div>
 </template>
 <script setup lang="ts">
-import { useLoginStore } from '@/stores/login'
 import { RouterView } from 'vue-router'
 import leftMenu from './leftMenu.vue'
 import { ref } from 'vue'
 const isCollapse = ref(false)
-const loginStore = useLoginStore()
+console.log('%c Line:20 🥑 isCollapse', 'color:#ed9ec7', isCollapse)
 const changeCollapse = (data: boolean) => {
   console.log('%c Line:23 🍌', 'color:#93c0a4', data)
   isCollapse.value = data

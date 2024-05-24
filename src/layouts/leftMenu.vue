@@ -4,48 +4,44 @@
       active-text-color="#ffd04b"
       background-color="#545c64"
       class="el-menu-vertical-demo"
-      default-active="2"
+      :default-active="$route.meta.parentPath"
       text-color="#fff"
       @open="handleOpen"
       @close="handleClose"
       :collapse="isCollapse"
       :router="true"
     >
-      <el-sub-menu index="/about">
+      <el-sub-menu v-for="item in menuList" :key="item.id" :index="item.url">
         <template #title>
-          <el-icon><location /></el-icon>
-          <span>Navigator One</span>
+          <el-icon>
+            <component :is="item.icon"></component>
+          </el-icon>
+          <span>{{ item.name }}</span>
         </template>
-        <el-menu-item-group title="Group One">
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item two</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="Group Two">
-          <el-menu-item index="1-3">item three</el-menu-item>
-        </el-menu-item-group>
-        <el-sub-menu index="1-4">
-          <template #title>item four</template>
-          <el-menu-item index="1-4-1">item one</el-menu-item>
-        </el-sub-menu>
+
+        <el-menu-item
+          v-if="item.children"
+          v-for="item1 in item.children"
+          :key="item1.id"
+          :index="item1.url"
+        >
+        <template #title>
+          <el-icon>
+            <component :is="item1.icon"></component>
+          </el-icon>
+          <span>{{ item1.name }}</span>
+        </template>
+        </el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="/about">
-        <el-icon><icon-menu /></el-icon>
-        <span>Navigator Two</span>
-      </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <el-icon><document /></el-icon>
-        <span>Navigator Three</span>
-      </el-menu-item>
-      <el-menu-item index="/about/test">
-        <el-icon><setting /></el-icon>
-        <span>Navigator Four</span>
-      </el-menu-item>
     </el-menu>
   </div>
 </template>
 <script setup lang="ts">
 import { Document, Menu as IconMenu, Location, Setting } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getMenuList } from '../api/modules/user'
+import type { menuType } from './types/index'
+let menuList = ref<menuType[]>([])
 const props = withDefaults(
   defineProps<{
     isCollapse: boolean
@@ -60,47 +56,11 @@ const handleOpen = (key: string, keyPath: string[]) => {
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
-const menuList = [
-  {
-    name: '首页',
-    path: '/home',
-    group: [
-      {
-        title: 'group1',
-        list: [
-          {
-            name: '首页1',
-            path: '/home1'
-          },
-          {
-            name: '首页2',
-            path: '/home2'
-          }
-        ]
-      },
-      {
-        title: 'group2',
-        list: [
-          {
-            name: '首页3',
-            path: '/home3'
-          },
-          {
-            name: '首页4',
-            path: '/home4'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    name: '列表',
-    path: '/list'
-  },
-  {
-    name: '详情',
-    path: '/detail'
-  }
-]
+
+onMounted(async () => {
+  const { data } = await getMenuList()
+  console.log('%c Line:56 🍐 data', 'color:#f5ce50', data)
+  menuList.value = data
+})
 </script>
 <style lang="less" scoped></style>
