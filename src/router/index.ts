@@ -8,6 +8,9 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: Layout,
+      meta: {
+        title: '首页'
+      },
       children: [
         {
           path: '',
@@ -24,21 +27,33 @@ const router = createRouter({
         {
           path: '',
           name: 'article',
+          meta: {
+            title: '文章管理'
+          },
           component: () => import('@/views/article/index.vue')
         },
         {
           path: '/article/category',
           name: 'category',
+          meta: {
+            title: '类别管理'
+          },
           component: () => import('@/views/article/category.vue')
         },
         {
           path: '/article/label',
           name: 'label',
+          meta: {
+            title: '标签管理'
+          },
           component: () => import('@/views/article/label.vue')
         },
         {
           path: '/article/talk',
           name: 'talk',
+          meta: {
+            title: '说说管理'
+          },
           component: () => import('@/views/article/talk.vue')
         }
       ]
@@ -62,7 +77,7 @@ const router = createRouter({
           // route level code-splitting
           // this generates a separate chunk (About.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import('../views/AboutView.vue'),
+          component: () => import('../views/AboutView.vue')
         },
         {
           path: 'test',
@@ -73,8 +88,8 @@ const router = createRouter({
           // route level code-splitting
           // this generates a separate chunk (About.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import('../views/TestView.vue'),
-        },
+          component: () => import('../views/TestView.vue')
+        }
       ]
     },
 
@@ -89,7 +104,7 @@ const router = createRouter({
     {
       path: '/:pathMatch(.*)',
       name: '404',
-      component: () => import('../views/NotFound.vue')
+      component: () => import('../views/404/index.vue')
     }
   ]
 })

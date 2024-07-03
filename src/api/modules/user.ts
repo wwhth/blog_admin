@@ -7,6 +7,6 @@ interface getMenuListResponse {
 export function getMenuList() {
   // 请求登录接口
   return zRequest.get<getMenuListResponse>({
-    url: 'api/v1/user/getMenuList',
+    url: 'api/v1/user/getMenuList'
   })
 }

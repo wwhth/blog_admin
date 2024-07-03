@@ -1,9 +1,13 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside :width="isCollapse ? '63px' : '200px'"
-        ><leftMenu :isCollapse="isCollapse"
-      /></el-aside>
+      <!-- <el-aside :width="isCollapse ? '63px' : '200px'"> -->
+      <leftMenu
+        :style="isCollapse ? 'width:64px' : 'width:200px'"
+        :isCollapse="isCollapse"
+      ></leftMenu>
+      <!-- </el-aside> -->
+
       <el-container>
         <el-header><Header @change-collapse="changeCollapse" /></el-header>
         <el-main><RouterView /></el-main>
@@ -17,9 +21,7 @@ import { RouterView } from 'vue-router'
 import leftMenu from './leftMenu.vue'
 import { ref } from 'vue'
 const isCollapse = ref(false)
-console.log('%c Line:20 🥑 isCollapse', 'color:#ed9ec7', isCollapse)
 const changeCollapse = (data: boolean) => {
-  console.log('%c Line:23 🍌', 'color:#93c0a4', data)
   isCollapse.value = data
 }
 </script>
@@ -37,7 +39,7 @@ const changeCollapse = (data: boolean) => {
   .el-aside {
     background-color: #d3dce6;
     color: var(--el-text-color-primary);
-    transition: width 0.3s ease;
+    transition: width 1s ease;
   }
   .el-main {
     background-color: #e9eef3;
@@ -47,5 +49,11 @@ const changeCollapse = (data: boolean) => {
     background-color: #b3c0d1;
     color: var(--el-text-color-primary);
   }
+  // :deep(.menu) {
+  //   transition: width 1s ease;
+  // }
+  // :deep(.el-menu-item) {
+  //   transition: width 1s ease;
+  // }
 }
 </style>
