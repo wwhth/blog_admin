@@ -42,8 +42,8 @@ interface RuleForm {
 }
 const router = useRouter()
 const form = ref<RuleForm>({
-  name: '',
-  password: ''
+  name: 'admin',
+  password: '123456'
 })
 const rules = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],

@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -79,6 +79,9 @@ devDependencies:
   jsdom:
     specifier: ^24.0.0
     version: 24.0.0
+  mitt:
+    specifier: ^3.0.1
+    version: 3.0.1
   npm-run-all2:
     specifier: ^6.1.2
     version: 6.1.2

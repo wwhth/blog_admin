@@ -1,4 +1,3 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useLoginStore = defineStore('login', {
@@ -7,7 +6,7 @@ export const useLoginStore = defineStore('login', {
   // return { token, isLogin }
   state: () => {
     return {
-      token: "",
+      token: '',
       isLogin: localStorage.getItem('token') ? true : false
     }
   },
@@ -15,6 +14,6 @@ export const useLoginStore = defineStore('login', {
     login(data: string) {
       this.token = data
       this.isLogin = true
-    },
+    }
   }
 })

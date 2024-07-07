@@ -7,7 +7,7 @@ class ZRequest {
   headers: Object
   // 让当前实例 => axios实例
   constructor(config: ZRequestConfig) {
-    console.log("%c Line:9 🍞 config", "color:#ed9ec7", config);
+    console.log('%c Line:9 🍞 config', 'color:#ed9ec7', config)
     this.instance = axios.create(config)
     this.headers = config.headers as Object
     this.instance.interceptors.request.use(
@@ -28,7 +28,7 @@ class ZRequest {
           localStorage.removeItem('token')
           window.location.reload()
         }
-        console.log(err)
+        return err.response.data
       }
     )
 
@@ -43,9 +43,8 @@ class ZRequest {
   }
   // 封装请求方法
   request<T = any>(config: ZRequestConfig<T>) {
-    console.log("%c Line:41 🍓 config", "color:#ed9ec7", config);
     config.headers = {
-      ...this.headers as AxiosHeaders,
+      ...(this.headers as AxiosHeaders),
       ...config.headers,
       Authorization: localStorage.getItem('token')
     }
@@ -67,7 +66,7 @@ class ZRequest {
     })
   }
   get<T = any>(config: ZRequestConfig<T>) {
-    console.log("%c Line:59 🌶 config", "color:#4fff4B", config);
+    console.log('%c Line:59 🌶 config', 'color:#4fff4B', config)
     return this.request<T>({ ...config, method: 'GET' })
   }
   post<T = any>(config: ZRequestConfig<T>) {
