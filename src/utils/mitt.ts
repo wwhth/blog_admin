@@ -4,6 +4,7 @@ type Events = {
   foo?: string
   bar?: number
   refreshLabelList: void
+  refreshCategoryList: void
 }
 
 const emitter: Emitter<Events> = mitt<Events>()

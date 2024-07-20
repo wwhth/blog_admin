@@ -94,7 +94,7 @@ const handelAdd = () => {
 const onLoad = async () => {
   const { data: categoriesData } = await getCategories()
   console.log('🚀 ~ onLoad ~ categoriesData:', categoriesData)
-  categoriesList.value = categoriesData
+  categoriesList.value = categoriesData as ICategory[]
   const { data: labelsData } = await getLabels()
   tableData.value = labelsData!
 }

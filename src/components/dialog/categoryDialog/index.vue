@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      :title="addOrUpdate ? '添加标签' : '修改标签'"
+      :title="addOrUpdate ? '添加类别' : '修改类别'"
       width="600px"
       v-model="visible"
       @close="onClose"
@@ -13,18 +13,8 @@
           :model="formLabelAlign"
           style="max-width: 600px"
         >
-          <el-form-item label="标签" prop="name">
+          <el-form-item label="类别" prop="name">
             <el-input v-model="formLabelAlign.name" />
-          </el-form-item>
-          <el-form-item label="类别" prop="category_id">
-            <el-select v-model="formLabelAlign.category_id" placeholder="请选择标签类别">
-              <el-option
-                v-for="item in categoriesList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
           </el-form-item>
         </el-form>
       </template>
@@ -41,29 +31,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { getCategories } from '@/api/modules/category'
-import { addLabel, updateLabel } from '@/api/modules/label'
+import { ref, reactive } from 'vue'
+import { createCategory, updateCategory } from '@/api/modules/category'
 import { ElMessage } from 'element-plus'
 import $bus from '@/utils/mitt'
-interface ICategory {
-  id: number
-  name: string
-}
 
 const props = defineProps<{
   addOrUpdate: boolean
 }>()
 const visible = ref(false)
-const labelId = ref<number | null>(null)
-const categoriesList = ref<ICategory[]>([])
+const categoryId = ref<number | null>(null)
 const confirmLoading = ref<boolean>(false)
 const formLabelAlign = reactive<{
   name: string
-  category_id: number | null
 }>({
-  name: '',
-  category_id: null
+  name: ''
 })
 
 const open = () => {
@@ -73,7 +55,6 @@ const onClose = () => {
   visible.value = false
 
   formLabelAlign.name = ''
-  formLabelAlign.category_id = null
 }
 
 const handleCancel = () => {
@@ -81,21 +62,19 @@ const handleCancel = () => {
 }
 
 const handleOk = async () => {
-  if (formLabelAlign.name === '' || formLabelAlign.category_id === null) {
-    ElMessage({ message: '请输入标签名称和类别', type: 'error' })
+  if (formLabelAlign.name === '') {
+    ElMessage({ message: '请输入类别', type: 'error' })
     return
   }
   confirmLoading.value = true
   if (props.addOrUpdate) {
     // 添加标签
-    const { code, message } = await addLabel(
-      formLabelAlign as { name: string; category_id: number }
-    )
+    const { code, message } = await createCategory(formLabelAlign as { name: string })
     if (code === 200) {
       ElMessage({ message, type: 'success' })
       confirmLoading.value = false
       visible.value = false
-      $bus.emit('refreshLabelList')
+      $bus.emit('refreshCategoryList')
     } else {
       ElMessage({ message, type: 'error' })
       confirmLoading.value = false
@@ -103,16 +82,15 @@ const handleOk = async () => {
   } else {
     // 修改标签
 
-    const { code, message } = await updateLabel({
-      id: labelId.value,
-      name: formLabelAlign.name,
-      category_id: formLabelAlign.category_id
+    const { code, message } = await updateCategory({
+      id: categoryId.value,
+      name: formLabelAlign.name
     } as { id: number; name: string; category_id: number })
     if (code === 200) {
       ElMessage({ message, type: 'success' })
       confirmLoading.value = false
       visible.value = false
-      $bus.emit('refreshLabelList')
+      $bus.emit('refreshCategoryList')
     } else {
       ElMessage({ message, type: 'error' })
       confirmLoading.value = false
@@ -120,16 +98,11 @@ const handleOk = async () => {
   }
 }
 
-onMounted(async () => {
-  const { data: categoriesData } = await getCategories()
-  categoriesList.value = categoriesData as ICategory[]
-})
-
 defineExpose({
   visible,
   open,
   formLabelAlign,
-  labelId
+  categoryId
 })
 </script>
 <style lang="less" scoped></style>
