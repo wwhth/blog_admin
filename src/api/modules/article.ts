@@ -11,6 +11,8 @@ interface articleResponse {
     content: string
     userid: number
     username: string
+    category_id: number
+    label_id: number
   }[]
   status?: number
 }

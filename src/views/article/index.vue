@@ -38,6 +38,8 @@ interface IArticle {
   content: string
   userid: number
   username: string
+  category_id: number
+  label_id: number
 }
 const tableData = ref<IArticle[]>([])
 const multipleSelection = ref<IArticle[]>([])

@@ -11,15 +11,37 @@
           <el-form-item label="标题" prop="title">
             <el-input v-model="formLabelAlign.title" />
           </el-form-item>
-          <el-form-item label="分类" prop="category">
-            <el-input v-model="formLabelAlign.category" />
+          <el-form-item label="分类" prop="category_id">
+            <el-select
+              v-model="formLabelAlign.category_id"
+              placeholder="请选择标签类别"
+              @change="categoryChange"
+            >
+              <el-option
+                v-for="item in categoriesList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
-          <el-form-item label="标签" prop="label">
-            <el-input v-model="formLabelAlign.label" />
+          <el-form-item label="标签" prop="label_id">
+            <el-select
+              v-model="formLabelAlign.label_id"
+              placeholder="请选择标签类别"
+              @change="labelChange"
+            >
+              <el-option
+                v-for="item in labelsList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
-          <el-form-item label="作者" prop="username">
+          <!-- <el-form-item v-show="!addOrUpdate" label="作者" prop="username">
             <el-input v-model="formLabelAlign.username" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="内容" prop="content">
             <editor v-model="formLabelAlign.content" />
           </el-form-item>
@@ -33,8 +55,22 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { addArticle, updateArticle } from '@/api/modules/article'
+import { getCategories } from '@/api/modules/category'
+import { getLabels } from '@/api/modules/label'
+
+interface ICategory {
+  id: number
+  name: string
+}
+
+interface ILabel {
+  id: number
+  name: string
+  category: string
+  category_id: number
+}
 
 interface IArticle {
   id: number
@@ -44,12 +80,19 @@ interface IArticle {
   content: string
   userid: number
   username: string
+  category_id: number
+  label_id: number
 }
 const props = defineProps({
   addOrUpdate: {
     type: Boolean,
     default: false
   }
+})
+onMounted(async () => {
+  const { data: categoriesData } = await getCategories()
+  categoriesList.value = categoriesData as ICategory[]
+  await getLabelList(formLabelAlign.value.category_id)
 })
 const formLabelAlign = ref<Partial<IArticle>>({
   id: 0,
@@ -60,7 +103,8 @@ const formLabelAlign = ref<Partial<IArticle>>({
   userid: 0,
   username: ''
 })
-
+const categoriesList = ref<ICategory[]>([])
+const labelsList = ref<ILabel[]>([])
 const visible = ref(false)
 const open = () => {
   visible.value = true
@@ -78,6 +122,27 @@ const onCommit = async () => {
   }
 }
 
+const getLabelList = async (category_id?: number) => {
+  console.log('🚀 ~ getLabelList ~ category_id:', category_id)
+  const { data } = await getLabels()
+
+  if (category_id) {
+    labelsList.value = data!.filter((item) => item.category_id === category_id)
+  } else {
+    labelsList.value = data as ILabel[]
+  }
+  console.log('🚀 ~ getLabelList ~ labelsList:', labelsList)
+}
+
+const categoryChange = async (value: number) => {
+  console.log('🚀 ~ categoryChange ~ value:', value)
+  await getLabelList(value)
+}
+const labelChange = (value: number) => {
+  formLabelAlign.value.category_id = labelsList.value.filter((item) => {
+    return item.id === value
+  })[0].category_id
+}
 defineExpose({
   visible,
   open,
