@@ -106,7 +106,7 @@ onUnmounted(() => {
 .addLabel {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   margin-bottom: 20px;
 
   .el-button {

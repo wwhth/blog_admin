@@ -6,7 +6,7 @@
       v-model="visible"
       @close="onClose"
     >
-      <template v-slot:default>
+      <template #default>
         <el-form
           label-position="right"
           label-width="auto"
@@ -18,7 +18,7 @@
           </el-form-item>
         </el-form>
       </template>
-      <template v-slot:footer>
+      <template #footer>
         <span class="dialog-footer">
           <el-button size="small" @click="handleCancel">取 消</el-button>
           <el-button size="small" type="primary" @click="handleOk" :loading="confirmLoading"

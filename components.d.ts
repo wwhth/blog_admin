@@ -7,9 +7,11 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    ArticleDialog: typeof import('./src/components/dialog/articleDialog/index.vue')['default']
     Breadcrumb: typeof import('./src/components/breadcrumb/index.vue')['default']
     CategoryDialog: typeof import('./src/components/dialog/categoryDialog/index.vue')['default']
     copy: typeof import('./src/components/dialog/labelDialog copy/index.vue')['default']
+    Editor: typeof import('./src/components/editor/index.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
