@@ -6,7 +6,8 @@ export const useLoginStore = defineStore('login', {
   // return { token, isLogin }
   state: () => {
     return {
-      token: '',
+      token: localStorage.getItem('userId') || undefined,
+      userId: undefined,
       isLogin: localStorage.getItem('token') ? true : false
     }
   },

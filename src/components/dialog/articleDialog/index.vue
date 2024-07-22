@@ -59,7 +59,7 @@ import { onMounted, ref } from 'vue'
 import { addArticle, updateArticle } from '@/api/modules/article'
 import { getCategories } from '@/api/modules/category'
 import { getLabels } from '@/api/modules/label'
-
+import bus from '@/utils/mitt'
 interface ICategory {
   id: number
   name: string
@@ -92,11 +92,6 @@ const props = defineProps({
 onMounted(async () => {
   const { data: categoriesData } = await getCategories()
   categoriesList.value = categoriesData as ICategory[]
-  console.log(
-    '%c Line:96 🍣 formLabelAlign.value.category_id',
-    'color:#ffdd4d',
-    formLabelAlign.value.category_id
-  )
 })
 const formLabelAlign = ref<Partial<IArticle>>({
   id: 0,
@@ -104,10 +99,10 @@ const formLabelAlign = ref<Partial<IArticle>>({
   label: '',
   title: '',
   content: '',
-  userid: 0,
+  userid: Number(localStorage.getItem('userId')) || undefined,
   username: '',
-  category_id: 0,
-  label_id: 0
+  category_id: undefined,
+  label_id: undefined
 })
 const categoriesList = ref<ICategory[]>([])
 const labelsList = ref<ILabel[]>([])
@@ -124,7 +119,7 @@ const onClose = () => {
     label: '',
     title: '',
     content: '',
-    userid: undefined,
+    userid: Number(localStorage.getItem('userId')) || undefined,
     username: '',
     category_id: undefined,
     label_id: undefined
@@ -133,16 +128,16 @@ const onClose = () => {
 const onCommit = async () => {
   if (props.addOrUpdate) {
     //TODO: 添加博客
+    await addArticle(formLabelAlign.value as IArticle)
   } else {
     //TODO: 更新博客
-    const { data: data } = await updateArticle(formLabelAlign.value as IArticle)
-    console.log('🚀 ~ onCommit ~ data:', data)
-    onClose()
+    await updateArticle(formLabelAlign.value as IArticle)
   }
+  bus.emit('refreshArticleList')
+  onClose()
 }
 
 const getLabelList = async (category_id?: number) => {
-  console.log('🚀 ~ getLabelList ~ category_id:', category_id)
   const { data } = await getLabels()
 
   if (category_id) {
@@ -150,11 +145,9 @@ const getLabelList = async (category_id?: number) => {
   } else {
     labelsList.value = data as ILabel[]
   }
-  console.log('🚀 ~ getLabelList ~ labelsList:', labelsList)
 }
 
 const categoryChange = async (value: number) => {
-  console.log('🚀 ~ categoryChange ~ value:', value)
   formLabelAlign.value.label_id = undefined
   await getLabelList(value)
 }

@@ -26,10 +26,11 @@
   <article-dialog ref="articleDialogRef" :addOrUpdate="addOrUpdate" />
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { getArticleList } from '@/api/modules/article'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { deleteArticle, getArticleList } from '@/api/modules/article'
 import articleDialog from '@/components/dialog/articleDialog/index.vue'
-
+import bus from '@/utils/mitt'
+import { ElMessage, ElMessageBox } from 'element-plus'
 interface IArticle {
   id: number
   category: string
@@ -47,6 +48,10 @@ const articleDialogRef = ref<typeof articleDialog>()
 const addOrUpdate = ref<boolean>(false)
 onMounted(async () => {
   await onLoad()
+  bus.on('refreshArticleList', onLoad)
+})
+onBeforeUnmount(() => {
+  bus.off('refreshArticleList', onLoad)
 })
 const onLoad = async () => {
   const { data } = await getArticleList()
@@ -68,8 +73,34 @@ const handleEdit = (index: number, row: IArticle) => {
   articleDialogRef.value?.open()
   console.log(index, row)
 }
-const handleDelete = (index: number, row: IArticle) => {
-  console.log(index, row)
+const handleDelete = async (index: number, row: IArticle) => {
+  ElMessageBox({
+    title: '提示',
+    message: '确定删除这篇文章吗?',
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    showCancelButton: true,
+    type: 'warning'
+  })
+    .then(async () => {
+      const { code, message } = await deleteArticle(row.id)
+      if (code === 200) {
+        ElMessage({
+          type: 'success',
+          message: message
+        })
+        onLoad()
+      } else {
+        ElMessage({
+          type: 'error',
+          message: message
+        })
+      }
+    })
+    .catch((err) => {
+      console.log('🚀 ~ handleDelete ~ err:', err)
+      // catch error
+    })
 }
 </script>
 <style lang="less" scoped>

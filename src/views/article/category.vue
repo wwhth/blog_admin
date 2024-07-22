@@ -67,7 +67,7 @@ const handleDelete = (index: number, row: ICategory) => {
           type: 'success',
           message: message
         })
-        $bus.emit('refreshCategoryList')
+        onLoad()
       } else {
         ElMessage({
           type: 'error',

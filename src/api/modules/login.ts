@@ -4,6 +4,7 @@ interface LoginResponse {
   message: string
   data: {
     token: string
+    id: number
   }
   status?: number
 }

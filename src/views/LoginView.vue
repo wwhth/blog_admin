@@ -59,6 +59,7 @@ function useLogin() {
         if (res.code === 0) {
           ElMessage.success(res.message)
           localStorage.setItem('token', res.data.token)
+          localStorage.setItem('userId', res.data.id + '')
           loginStore.login(res.data.token)
           router.push('/')
         } else if (res.status === -1002) {
