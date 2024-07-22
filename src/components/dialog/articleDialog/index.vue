@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog width="1200px" v-model="visible" @close="onClose" :title="'博客'">
+    <el-dialog width="820px" v-model="visible" @close="onClose" :title="'博客'">
       <template #default>
         <el-form
           label-position="right"
@@ -92,7 +92,11 @@ const props = defineProps({
 onMounted(async () => {
   const { data: categoriesData } = await getCategories()
   categoriesList.value = categoriesData as ICategory[]
-  await getLabelList(formLabelAlign.value.category_id)
+  console.log(
+    '%c Line:96 🍣 formLabelAlign.value.category_id',
+    'color:#ffdd4d',
+    formLabelAlign.value.category_id
+  )
 })
 const formLabelAlign = ref<Partial<IArticle>>({
   id: 0,
@@ -101,16 +105,30 @@ const formLabelAlign = ref<Partial<IArticle>>({
   title: '',
   content: '',
   userid: 0,
-  username: ''
+  username: '',
+  category_id: 0,
+  label_id: 0
 })
 const categoriesList = ref<ICategory[]>([])
 const labelsList = ref<ILabel[]>([])
 const visible = ref(false)
-const open = () => {
+const open = async () => {
+  await getLabelList(formLabelAlign.value.category_id)
   visible.value = true
 }
 const onClose = () => {
   visible.value = false
+  formLabelAlign.value = {
+    id: undefined,
+    category: '',
+    label: '',
+    title: '',
+    content: '',
+    userid: undefined,
+    username: '',
+    category_id: undefined,
+    label_id: undefined
+  }
 }
 const onCommit = async () => {
   if (props.addOrUpdate) {
@@ -119,6 +137,7 @@ const onCommit = async () => {
     //TODO: 更新博客
     const { data: data } = await updateArticle(formLabelAlign.value as IArticle)
     console.log('🚀 ~ onCommit ~ data:', data)
+    onClose()
   }
 }
 
@@ -136,6 +155,7 @@ const getLabelList = async (category_id?: number) => {
 
 const categoryChange = async (value: number) => {
   console.log('🚀 ~ categoryChange ~ value:', value)
+  formLabelAlign.value.label_id = undefined
   await getLabelList(value)
 }
 const labelChange = (value: number) => {
@@ -150,4 +170,9 @@ defineExpose({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+:deep().el-dialog {
+  height: 600px;
+  overflow: auto;
+}
+</style>
