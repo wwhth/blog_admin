@@ -8,8 +8,8 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column property="name" label="类别" width="120" />
-      <el-table-column label="操作">
+      <el-table-column property="name" label="类别" />
+      <el-table-column label="操作" width="220">
         <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"> 编辑 </el-button>
           <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">
