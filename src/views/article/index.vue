@@ -12,7 +12,7 @@
       <el-table-column property="category" label="类别" />
       <el-table-column property="label" label="标签" />
       <el-table-column property="username" label="作者" />
-      <!-- <el-table-column property="introduce" label="介绍" show-overflow-tooltip /> todo 暂时没这个字段 -->
+      <el-table-column property="introduce" label="介绍" show-overflow-tooltip />
       <el-table-column label="操作">
         <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"> 编辑 </el-button>

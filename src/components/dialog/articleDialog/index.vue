@@ -11,6 +11,9 @@
           <el-form-item label="标题" prop="title">
             <el-input v-model="formLabelAlign.title" />
           </el-form-item>
+          <el-form-item label="简介" prop="introduce">
+            <el-input v-model="formLabelAlign.introduce" />
+          </el-form-item>
           <el-form-item label="分类" prop="category_id">
             <el-select
               v-model="formLabelAlign.category_id"
@@ -82,6 +85,7 @@ interface IArticle {
   username: string
   category_id: number
   label_id: number
+  introduce: string
 }
 const props = defineProps({
   addOrUpdate: {
@@ -101,6 +105,7 @@ const formLabelAlign = ref<Partial<IArticle>>({
   content: '',
   userid: Number(localStorage.getItem('userId')) || undefined,
   username: '',
+  introduce: '',
   category_id: undefined,
   label_id: undefined
 })
