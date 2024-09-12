@@ -1,0 +1,1 @@
+import{d as e,a as o,c as t,_ as s}from"./index-C35omCHH.js";const c=e({__name:"TestView",setup(n){return console.log("%c Line:6 🍆","color:#465975"),(a,_)=>(o(),t("div",null,"test111"))}}),l=s(c,[["__scopeId","data-v-19b81483"]]);export{l as default};

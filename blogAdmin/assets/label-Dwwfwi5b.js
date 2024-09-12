@@ -1,0 +1,1 @@
+import{z as a}from"./index-C35omCHH.js";function l(){return a.get({url:"api/v1/label"})}function r(e){return a.post({url:"api/v1/label/create",data:e})}function u(e){return a.post({url:"api/v1/label/update",data:e})}function n(e){return a.get({url:`api/v1/label/delete/${e}`})}export{r as a,n as d,l as g,u};
