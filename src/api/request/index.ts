@@ -24,6 +24,7 @@ class ZRequest {
         return res.data
       },
       (err) => {
+        console.log('🚀 ~ ZRequest ~ constructor ~ err:', err)
         if (err.response.status === 401) {
           localStorage.removeItem('token')
           window.location.reload()

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-dialog width="820px" v-model="visible" @close="onClose" :title="'博客'">
+    <el-dialog width="65vw" v-model="visible" @close="onClose" :title="'博客'">
       <template #default>
         <el-form
           label-position="right"
           label-width="auto"
           :model="formLabelAlign"
-          style="max-width: 800px"
+          style="max-width: 60vw"
         >
           <el-form-item label="标题" prop="title">
             <el-input v-model="formLabelAlign.title" />
@@ -28,6 +28,14 @@
               />
             </el-select>
           </el-form-item>
+          <el-form-item label="文章类型" prop="artical_type">
+            <el-switch
+              v-model="formLabelAlign.artical_type"
+              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+              active-text="富文本"
+              inactive-text="md"
+            />
+          </el-form-item>
           <el-form-item label="标签" prop="label_id">
             <el-select
               v-model="formLabelAlign.label_id"
@@ -46,7 +54,8 @@
             <el-input v-model="formLabelAlign.username" />
           </el-form-item> -->
           <el-form-item label="内容" prop="content">
-            <editor v-model="formLabelAlign.content" />
+            <editor v-if="formLabelAlign.artical_type" v-model="formLabelAlign.content" />
+            <editorMD v-else v-model="formLabelAlign.content" />
           </el-form-item>
         </el-form>
       </template>
@@ -62,6 +71,7 @@ import { onMounted, ref } from 'vue'
 import { addArticle, updateArticle } from '@/api/modules/article'
 import { getCategories } from '@/api/modules/category'
 import { getLabels } from '@/api/modules/label'
+import editorMD from '@/components/editor/md.vue'
 import bus from '@/utils/mitt'
 interface ICategory {
   id: number
@@ -86,6 +96,7 @@ interface IArticle {
   category_id: number
   label_id: number
   introduce: string
+  artical_type: boolean | number
 }
 const props = defineProps({
   addOrUpdate: {
@@ -107,7 +118,8 @@ const formLabelAlign = ref<Partial<IArticle>>({
   username: '',
   introduce: '',
   category_id: undefined,
-  label_id: undefined
+  label_id: undefined,
+  artical_type: false
 })
 const categoriesList = ref<ICategory[]>([])
 const labelsList = ref<ILabel[]>([])
@@ -127,10 +139,13 @@ const onClose = () => {
     userid: Number(localStorage.getItem('userId')) || undefined,
     username: '',
     category_id: undefined,
-    label_id: undefined
+    label_id: undefined,
+    artical_type: false
   }
 }
 const onCommit = async () => {
+  // formLabelAlign.value.artical_type = Number(formLabelAlign.value.artical_type)
+  console.log('🚀 ~ onCommit ~ formLabelAlign.value:', formLabelAlign.value)
   if (props.addOrUpdate) {
     //TODO: 添加博客
     await addArticle(formLabelAlign.value as IArticle)

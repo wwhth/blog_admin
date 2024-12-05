@@ -6,7 +6,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: '',
       component: Layout,
       meta: {
         title: '首页'
@@ -19,7 +19,7 @@ const router = createRouter({
         },
         {
           path: '/article',
-          name: 'article',
+          name: '',
           meta: {
             title: '文章管理'
           },
@@ -57,7 +57,7 @@ const router = createRouter({
         },
         {
           path: '/about',
-          name: 'about',
+          name: '',
           // route level code-splitting
           // this generates a separate chunk (About.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
@@ -87,9 +87,7 @@ const router = createRouter({
               component: () => import('../views/TestView.vue')
             }
           ]
-        },
-
-
+        }
       ]
     },
     {

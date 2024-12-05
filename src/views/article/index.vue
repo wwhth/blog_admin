@@ -41,6 +41,7 @@ interface IArticle {
   username: string
   category_id: number
   label_id: number
+  artical_type: number | boolean
 }
 const tableData = ref<IArticle[]>([])
 const multipleSelection = ref<IArticle[]>([])
@@ -55,7 +56,11 @@ onBeforeUnmount(() => {
 })
 const onLoad = async () => {
   const { data } = await getArticleList()
-  tableData.value = data as IArticle[]
+  console.log('🚀 ~ onLoad ~ data:', data)
+  tableData.value = (data as IArticle[]).map((item: IArticle) => {
+    item.artical_type = Boolean(item.artical_type)
+    return item
+  })
 }
 const handleSelectionChange = (val: IArticle[]) => {
   console.log('🚀 ~ handleSelectionChange ~ val:', val)
